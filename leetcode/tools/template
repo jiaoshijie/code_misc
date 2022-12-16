@@ -1,0 +1,13 @@
+#include "head.hpp"
+
+class Solution {
+public:
+  void func() {
+
+  }
+};
+
+int main() {
+  Solution s;
+  return 0;
+}
