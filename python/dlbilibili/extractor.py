@@ -21,6 +21,36 @@ class biliExtractor:
             return "mp4"
         return re.search('.+/(.+)', temp).group(1)
 
+    def get_playlist(self, url):
+        html, err = req.Get(url)
+        if err != 0:
+            print(err)
+            exit(1)
+        info = re.search(
+            r"window.__INITIAL_STATE__=(.+);\(function", html.text).group(1)
+        js = json.loads(info)
+        episodes = []
+        for item in js["sections"][0]["episodes"]:
+            """
+            dict_keys(['title', 'bvid'])
+            """
+            episodes.append(item["bvid"])
+        # print("' '".join(episodes))
+
+        with open("./d.sh", "w") as f:
+            f.write(f"""#!/usr/bin/env bash\n\n
+file_name=1
+for i in '{"' '".join(episodes)}'; do
+    # echo "$i"
+    # lux -c c.txt -i $i
+    # break
+    lux -c c.txt -f 116-12 -O "$file_name" "$i" || break
+    ((file_name++))
+done
+""")
+
+
+
     def Extractor(self, url):
         html, err = req.Get(url)
         if err != 0:
