@@ -41,10 +41,11 @@ class biliExtractor:
             f.write(f"""#!/usr/bin/env bash\n\n
 file_name=1
 for i in '{"' '".join(episodes)}'; do
-    # echo "$i"
     # lux -c c.txt -i $i
     # break
-    lux -c c.txt -f 116-12 -O "$file_name" "$i" || break
+    if ! lux -c c.txt -f 116-12 -O "$file_name" "$i"; then
+        lux -c c.txt -f 116-7 -O "$file_name" "$i" || break
+    fi
     ((file_name++))
 done
 """)

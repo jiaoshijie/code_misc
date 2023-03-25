@@ -1,7 +1,9 @@
 V := @
 
-Source := ./0086_partition.rs
+Source := ./0093_restore_ip_addresses.rs
 # Source := ./0000_test.rs
+
+CC_Source := ./0092_reverse_between.cpp
 
 CC := c++
 # CC := clang++
@@ -22,10 +24,10 @@ cc-run: cc-build
 	$(V)./demo
 
 cc-build:
-	$(V)$(CC) $(CC_VERSION) $(CC_ARGV) -o demo $(Source)
+	$(V)$(CC) $(CC_VERSION) $(CC_ARGV) -o demo $(CC_Source)
 
 cc-gdb:
-	$(V)$(CC) $(VERSION) $(ARGV) -o demo -g $(Source)
+	$(V)$(CC) $(VERSION) $(ARGV) -o demo -g $(CC_Source)
 	$(V)gdb -q ./demo -x ./tools/gdbinit
 	$(V)rm -rf demo
 
