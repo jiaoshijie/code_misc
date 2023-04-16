@@ -4,6 +4,14 @@ fn print_type_of<T>(_: &T) {
 }
 
 fn main() {
-    let mut v = vec!["jiao", "shi", "jie"];
-    println!("{}", v.join("."));
+    let a = Some(1);
+    let b = Some(2);
+
+    match (a, b) {
+        (aa, bb) => {
+            print_type_of(&aa);
+            print_type_of(&bb);
+        },
+        (_, _) => {}
+    }
 }
