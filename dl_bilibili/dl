@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+count=5
+for i in "https://www.bilibili.com/bangumi/play/ep199685" "https://www.bilibili.com/bangumi/play/ep199686" "https://www.bilibili.com/bangumi/play/ep199687" "https://www.bilibili.com/bangumi/play/ep199688" "https://www.bilibili.com/bangumi/play/ep199689" "https://www.bilibili.com/bangumi/play/ep199690" "https://www.bilibili.com/bangumi/play/ep199691" "https://www.bilibili.com/bangumi/play/ep199692" "https://www.bilibili.com/bangumi/play/ep199693"; do
+  lux -c c.txt -f 80-12 -o "./1/" -O "$count.mp4" "$i" || break
+  ((count++))
+done

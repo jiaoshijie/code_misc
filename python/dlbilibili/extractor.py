@@ -1,6 +1,7 @@
 import req
 import re
 import json
+import requests
 
 # video api
 bilibiliBangumiAPI = "https://api.bilibili.com/pgc/player/web/playurl?"
@@ -21,6 +22,31 @@ class biliExtractor:
             return "mp4"
         return re.search('.+/(.+)', temp).group(1)
 
+    def get_playlist_fanju(self, url):
+        html = requests.get(url)
+        info = re.search(
+            r"window.__INITIAL_STATE__=(.+);\(function", html.text).group(1)
+        js = json.loads(info)
+        # print(js['epList'])
+
+        episodes = []
+        for li in js['epList']:
+            episodes.append('https://www.bilibili.com/bangumi/play/ep' + str(li['id']))
+        # print(episodes)
+
+        with open("./d.sh", "w") as f:
+            f.write(f"""#!/usr/bin/env bash\n\n
+file_name=1
+for i in '{"' '".join(episodes)}'; do
+    # lux -c c.txt -i $i
+    # break
+    if ! lux -c c.txt -f 116-12 -O "$file_name" "$i"; then
+        lux -c c.txt -f 116-7 -O "$file_name" "$i" || break
+    fi
+    ((file_name++))
+done
+""")
+
     def get_playlist(self, url):
         html, err = req.Get(url)
         if err != 0:
@@ -36,6 +62,7 @@ class biliExtractor:
             """
             episodes.append(item["bvid"])
         # print("' '".join(episodes))
+        # exit(0)
 
         with open("./d.sh", "w") as f:
             f.write(f"""#!/usr/bin/env bash\n\n
