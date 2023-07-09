@@ -1,0 +1,6 @@
+set debuginfod enabled off
+b 12
+r
+p a
+p *a
+info vtbl a

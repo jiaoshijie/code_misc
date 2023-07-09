@@ -1,0 +1,4 @@
+set debuginfod enabled off
+b 26
+r
+x /40xb p
