@@ -1,19 +1,13 @@
-#include <iostream>
 #include <cstring>
+#include <iostream>
 
 class A {
 public:
-  virtual void vfoo_1() {
-    std::cout << "a_vfoo_1\n";
-  }
+  virtual void vfoo_1() { std::cout << "a_vfoo_1\n"; }
 
-  virtual void vfoo_2(int a) {
-    std::cout << "a_vfoo_2: " << a << std::endl;
-  }
+  virtual void vfoo_2(int a) { std::cout << "a_vfoo_2: " << a << std::endl; }
 
-  virtual int vfoo_3(int a, int b) {
-    return a + b;
-  }
+  virtual int vfoo_3(int a, int b) { return a + b; }
 };
 
 typedef void (*void_pfunc_void)();
@@ -26,17 +20,11 @@ struct other_vtable {
   int_pfunc_int_int pf3;
 };
 
-void g_f1() {
-  std::cout << "g_f1\n";
-}
+void g_f1() { std::cout << "g_f1\n"; }
 
-void g_f2(int a) {
-  std::cout << "g_f2: " << a * 10 << std::endl;
-}
+void g_f2(int a) { std::cout << "g_f2: " << a * 10 << std::endl; }
 
-int g_f3(int a, int b) {
-  return a * b;
-}
+int g_f3(int a, int b) { return b * 10; }
 
 int main(void) {
   A *a = new A;
@@ -57,6 +45,8 @@ int main(void) {
   a->vfoo_1();
   a->vfoo_2(10);
   printf("a->vfoo_3: %d\n", a->vfoo_3(2, 5));
+
+  int breakpoint = 0;
 
   return 0;
 }
