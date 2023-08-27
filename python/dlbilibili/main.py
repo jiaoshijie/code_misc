@@ -17,8 +17,8 @@ def main():
 def download(url):
     # bilibli video 解析器
     etr = extractor.biliExtractor()
-    # dl_info = etr.get_playlist(url)
-    dl_info = etr.get_playlist_fanju(url)
+    dl_info = etr.get_playlist(url)
+    # dl_info = etr.get_playlist_fanju(url)
     # 下载器
     # dler = downloader.dler()
     # dler.download(dl_info)

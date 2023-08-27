@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# make distclean
+sudo rm -rf /usr/local/{bin/nvim,share/nvim/,lib/nvim} && sudo make CMAKE_BUILD_TYPE=Release install

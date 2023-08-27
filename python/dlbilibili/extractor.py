@@ -49,6 +49,7 @@ done
 
     def get_playlist(self, url):
         html, err = req.Get(url)
+        print(html.content.decode("utf-8"))
         if err != 0:
             print(err)
             exit(1)
