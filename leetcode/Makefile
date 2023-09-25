@@ -3,11 +3,11 @@ V := @
 Source := ./0098_is_valid_bst.rs
 # Source := ./0000_test.rs
 
-CC_Source := ./0092_reverse_between.cpp
+CC_Source := ./0215_findKthLargest.cpp
 
 CC := c++
 # CC := clang++
-CC_VERSION := -std=c++14
+CC_VERSION := -std=c++17
 CC_ARGV := -W -Wall
 
 rust: rust-run clean
