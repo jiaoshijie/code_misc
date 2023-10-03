@@ -8,10 +8,16 @@ impl Solution {
         if s1.is_empty() && s2.is_empty() && s3.is_empty() {
             return true;
         }
-        if !s1.is_empty() && s1.as_bytes()[0] == s3.as_bytes()[0] && Solution::dfs(&s1, &s2, &s3, 0, 0, 0) {
+        if !s1.is_empty()
+            && s1.as_bytes()[0] == s3.as_bytes()[0]
+            && Solution::dfs(&s1, &s2, &s3, 0, 0, 0)
+        {
             return true;
         }
-        if !s2.is_empty() && s2.as_bytes()[0] == s3.as_bytes()[0] && Solution::dfs(&s2, &s1, &s3, 0, 0, 0) {
+        if !s2.is_empty()
+            && s2.as_bytes()[0] == s3.as_bytes()[0]
+            && Solution::dfs(&s2, &s1, &s3, 0, 0, 0)
+        {
             return true;
         }
         false
@@ -52,10 +58,37 @@ impl Solution {
 }
 
 fn main() {
-    assert_eq!(Solution::is_interleave(String::from("aabcc"), String::from("dbbca"), String::from("aadbbcbcac")), true);
-    assert_eq!(Solution::is_interleave(String::from("aabcc"), String::from("dbbca"), String::from("aadbbbaccc")), false);
-    assert_eq!(Solution::is_interleave(String::from(""), String::from(""), String::from("")), true);
-    assert_eq!(Solution::is_interleave(String::from("a"), String::from("b"), String::from("a")), false);
-    assert_eq!(Solution::is_interleave(String::from("aabcc"), String::from("dbbca"), String::from("aadbcbbcac")), true);
+    assert_eq!(
+        Solution::is_interleave(
+            String::from("aabcc"),
+            String::from("dbbca"),
+            String::from("aadbbcbcac")
+        ),
+        true
+    );
+    assert_eq!(
+        Solution::is_interleave(
+            String::from("aabcc"),
+            String::from("dbbca"),
+            String::from("aadbbbaccc")
+        ),
+        false
+    );
+    assert_eq!(
+        Solution::is_interleave(String::from(""), String::from(""), String::from("")),
+        true
+    );
+    assert_eq!(
+        Solution::is_interleave(String::from("a"), String::from("b"), String::from("a")),
+        false
+    );
+    assert_eq!(
+        Solution::is_interleave(
+            String::from("aabcc"),
+            String::from("dbbca"),
+            String::from("aadbcbbcac")
+        ),
+        true
+    );
     assert_eq!(Solution::is_interleave(String::from("abababababababababababababababababababababababababababababababababababababababababababababababababbb"), String::from("babababababababababababababababababababababababababababababababababababababababababababababababaaaba"), String::from("abababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababababbb")), true);
 }
