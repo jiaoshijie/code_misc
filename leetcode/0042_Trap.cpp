@@ -1,8 +1,12 @@
 #include "head.hpp"
 
+using std::vector;
+using std::stack;
+
 class Solution {
 public:
-  int trap(std::vector<int>& height) {
+  // double pointer
+  int trap_double_pointer(std::vector<int>& height) {
     int out = 0, hi = 0;
     for (int i = 1; i < int(height.size()); i++) {
       if (height[i] != 0) {
@@ -22,6 +26,10 @@ public:
       }
     }
     return out;
+  }
+
+  // Monotonic stack
+  int trap(vector<int>& height) {
   }
 };
 
