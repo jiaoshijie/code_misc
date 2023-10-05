@@ -3,7 +3,7 @@ V := @
 # Source := ./0098_is_valid_bst.rs
 # Source := ./0000_test.rs
 
-CC_Source := ./0096_num_trees.cpp
+CC_Source := ./0416_canPartition.cpp
 # CC_Source := ./0000_test.cpp
 
 CC := c++
