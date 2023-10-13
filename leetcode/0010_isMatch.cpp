@@ -3,9 +3,12 @@
 // TODO: 优化时间 14.98% 😭
 // TODO: write a article
 
+using std::string;
+using std::vector;
+
 class Solution {
 public:
-  bool isMatch(std::string s, std::string p) {
+  bool isMatch_(std::string s, std::string p) {
     int i = 0, j = 0;
     while (i < (int)s.size() && j < (int)p.size()) {
       if (s[i] == p[j] || p[j] == '.') {
@@ -36,6 +39,12 @@ public:
       else break;
     }
     return i < (int)s.size() || j < (int)p.size() ? false : true;
+  }
+
+  bool isMatch(string s, string p) {
+    vector<vector<bool>> dp(s.size() + 1, vector<bool>(p.size() + 1, false));
+    dp[0][0] = true;
+    for 
   }
 };
 
