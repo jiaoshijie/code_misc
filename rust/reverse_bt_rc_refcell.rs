@@ -1,6 +1,6 @@
+use std::cell::RefCell;
 use std::collections::VecDeque;
 use std::rc::Rc;
-use std::cell::RefCell;
 
 #[allow(dead_code)]
 fn print_type<T>(_: &T) {
@@ -37,7 +37,10 @@ struct Tree {
 
 impl Tree {
     pub fn new() -> Self {
-        Self { head: None, count: 0 }
+        Self {
+            head: None,
+            count: 0,
+        }
     }
 
     fn check(_count: usize) -> bool {
@@ -95,12 +98,11 @@ impl Tree {
 
     fn recursive_reverse(root: Option<Rc<RefCell<Node>>>) {
         if let Some(r) = root {
-            let mut r = r.borrow_mut();
-            let temp = r.left.take();
-            let temp = std::mem::replace(&mut r.right, temp);
-            r.left = temp;
-            Self::recursive_reverse(r.left.clone());
-            Self::recursive_reverse(r.right.clone());
+            let left = r.clone();
+            let right = r.clone();
+            let left = &mut left.borrow().left;
+            let right = &mut right.borrow().right;
+            std::mem::swap(left, right);
         }
     }
 
