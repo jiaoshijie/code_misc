@@ -29,9 +29,7 @@ struct Tree {
 
 impl Tree {
     pub fn new() -> Self {
-        Self {
-            head: None,
-        }
+        Self { head: None }
     }
 
     pub fn build_from_slice(array: &[i32]) -> Self {
@@ -56,7 +54,8 @@ impl Tree {
         ret
     }
 
-    pub fn pretty_print(&self) {
+    #[allow(dead_code)]
+    pub fn print(&self) {
         let mut queue: VecDeque<(usize, &Box<Node>)> = VecDeque::new();
         if let Some(ref head) = self.head {
             queue.push_back((0, head));
@@ -80,18 +79,62 @@ impl Tree {
         }
     }
 
-    fn reverse_recursively(root: &mut Option<Box<Node>>) {
+    #[allow(dead_code)]
+    pub fn pretty_print(&self) {
+        let mut stack: Vec<(usize, &Box<Node>)> = Vec::new();
+        if let Some(ref head) = self.head {
+            stack.push((0, head));
+            let mut l = &head.left;
+            let mut level = 0;
+            while !stack.is_empty() {
+                while let Some(ref left) = l {
+                    level += 1;
+                    stack.push((level, left));
+                    l = &left.left;
+                }
+                if let Some((lev, root)) = stack.pop() {
+                    println!("{}{}", " ".repeat((lev * 3).saturating_sub(1)), root.val);
+                    if let Some(ref right) = root.right {
+                        level = lev + 1;
+                        stack.push((level, right));
+                        l = &right.left;
+                    }
+                }
+            }
+        }
+    }
+
+    #[allow(dead_code)]
+    fn reverse_recursive(root: &mut Option<Box<Node>>) {
         if let Some(root) = root {
             // TODO: why it works?
-            print_type(&root);
+            // print_type(&root);
             std::mem::swap(&mut root.left, &mut root.right);
-            Self::reverse_recursively(&mut root.left);
-            Self::reverse_recursively(&mut root.right);
+            Self::reverse_recursive(&mut root.left);
+            Self::reverse_recursive(&mut root.right);
+        }
+    }
+
+    #[allow(dead_code)]
+    fn reverse_non_recursive(root: &mut Option<Box<Node>>) {
+        if let Some(root) = root {
+            let mut stack: Vec<&mut Box<Node>> = Vec::new();
+            stack.push(root);
+            while let Some(root) = stack.pop() {
+                std::mem::swap(&mut root.left, &mut root.right);
+                if let Some(ref mut left) = root.left {
+                    stack.push(left);
+                }
+                if let Some(ref mut right) = root.right {
+                    stack.push(right);
+                }
+            }
         }
     }
 
     pub fn reverse(&mut self) {
-        Self::reverse_recursively(&mut self.head);
+        // Self::reverse_recursive(&mut self.head);
+        Self::reverse_non_recursive(&mut self.head);
     }
 }
 
@@ -102,7 +145,8 @@ impl From<Node> for Option<Box<Node>> {
 }
 
 fn main() {
-    let mut tree = Tree::build_from_slice(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    // let mut tree = Tree::build_from_slice(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    let mut tree = Tree::build_from_slice(&[1, 2, 3, 4, 5, 6, 7]);
     tree.pretty_print();
     tree.reverse();
     println!("----------------------");
