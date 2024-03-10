@@ -1,6 +1,6 @@
 V := @
 
-Source := doublepointer.c
+Source := pointer2pointer.c
 
 Head := ./head
 Runable := $(basename $(Source))
