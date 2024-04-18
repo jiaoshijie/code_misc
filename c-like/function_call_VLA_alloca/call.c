@@ -13,9 +13,7 @@ void func3(int a, int b, int c, int d, int e, int f, int g, int h, int i) {
   a = g + h;
 }
 
-int main() {
-  int *c = 0;
-  func2(c);
+void func4() {
   int a1 = 1;
   int a2 = 2;
   int a3 = 3;
@@ -26,5 +24,10 @@ int main() {
   int a8 = 8;
   int a9 = 9;
   func3(a1, a2, a3, a4, a5, a6, a7, a8, a9);
+}
+
+int main() {
+  int *c = 0;
+  func2(c);
   return 0;
 }
