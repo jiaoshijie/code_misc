@@ -1,0 +1,7 @@
+set disassembly-flavor intel
+b main
+run
+display/5i $pc
+display/x $rbp
+display/x $rsp
+display/x $rax
