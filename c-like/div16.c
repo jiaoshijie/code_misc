@@ -6,6 +6,7 @@ int div16(int x) {
 }
 
 int main() {
+    assert(div16(0) == 0 / 16);
     assert(div16(17) == 17/16);
     assert(div16(33) == 33/16);
     assert(div16(-17) == -17/16);
