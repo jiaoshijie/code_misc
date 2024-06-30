@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <python3.9/Python.h>
+#include <Python.h>
 
 class LoadPy {
 private:
