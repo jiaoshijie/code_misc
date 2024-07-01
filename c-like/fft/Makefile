@@ -4,7 +4,7 @@ run: compile
 	$(V)./a.out
 
 compile:
-	$(V)c++ `pkg-config  --cflags --libs python3-embed` main.cpp
+	$(V)c++ main.cpp `pkg-config --cflags python3-embed` `python3-config --ldflags --embed` -g
 
 clean:
 	$(V)rm -f ./a.out
