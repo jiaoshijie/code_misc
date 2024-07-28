@@ -2,7 +2,7 @@ V := @
 
 CC := cc
 ARGS := -Wall -Wextra -Werror
-BIN := demo
+BIN := sl
 
 SRC := skip_list.c test.c
 
