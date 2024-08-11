@@ -3,6 +3,17 @@
 import sys
 import struct
 
+index = 999;
+
+def verify(num):
+    global index
+
+    if num == index:
+        index += 1
+    else:
+        print(f"ERROR: {num} is not matched, which should be {index}")
+        exit(1)
+
 def to_int(str_bytes):
     if len(str_bytes) != 4:
         print("End of file")
@@ -21,19 +32,17 @@ def main():
     fd = open("./log.file", "rb")
 
     fd.seek(1024, 0)
-
     while True:
-        id = to_int(fd.read(4))
+        verify(to_int(fd.read(4)))
 
         fd.read(16)  # TODO: timespec
 
-        pos = to_double(fd.read(8))
-        vel = to_double(fd.read(8))
-        pos_cmd = to_double(fd.read(8))
-        vel_cmd = to_double(fd.read(8))
-        cpos = to_int(fd.read(4))
+        verify(int(to_double(fd.read(8))))
+        verify(int(to_double(fd.read(8))))
+        verify(int(to_double(fd.read(8))))
+        verify(int(to_double(fd.read(8))))
 
-        print(id, pos, vel, pos_cmd, vel_cmd, cpos)
+        verify(to_int(fd.read(4)))
 
     fd.close()
 

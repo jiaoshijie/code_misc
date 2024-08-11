@@ -20,7 +20,7 @@ static bool g_has_content = false;
 static pthread_cond_t g_cond;
 static pthread_mutex_t g_mutex;
 
-static uint64_t cycle_us = 100000;
+static uint64_t cycle_us = 1000;
 
 #define ONE_KILOBYTE 1024
 
@@ -34,7 +34,7 @@ typedef struct {
     uint32_t cpos;
 }row_t;
 
-#define ROWS_SIZE 50
+#define ROWS_SIZE 8192
 
 static uint8_t *g_rows[2];
 static int g_rows_using_index = 0;
@@ -56,17 +56,21 @@ void *write2file_thread(void *arg) {
         exit(1);
     }
 
+    uint8_t *one_rows = (uint8_t *)malloc(sizeof(uint8_t) * g_row_real_len * ROWS_SIZE);
+    // error check
+
     while (g_running) {
         pthread_mutex_lock(&g_mutex);
         pthread_cond_wait(&g_cond, &g_mutex);
         int local_row_index = g_rows_using_index ^ 1;
         bool local_has_content = g_has_content;
         g_has_content = false;
+        memcpy(one_rows, g_rows[local_row_index], g_row_real_len * ROWS_SIZE);
         pthread_mutex_unlock(&g_mutex);
 
         if (local_has_content) {
             printf("INFO: Sub thread: writing %d\n", local_row_index);
-            if (write(fd, g_rows[local_row_index], g_row_real_len * ROWS_SIZE) == -1) {
+            if (write(fd, one_rows, g_row_real_len * ROWS_SIZE) == -1) {
                 fprintf(stderr, "ERROR: Write to file failed: %s\n", strerror(errno));
                 exit(1);
             }
@@ -75,7 +79,7 @@ void *write2file_thread(void *arg) {
     }
 
     close(fd);
-
+    printf("End of Sub Thread\n");
     return NULL;
 }
 
@@ -222,7 +226,7 @@ int main() {
     pthread_join(thread, NULL);
     pthread_cond_destroy(&g_cond);
     pthread_mutex_destroy(&g_mutex);
-    printf("End of program\n");
+    printf("End of Main Thread\n");
     // close(fd);  // write2file_thread will close this file
     return 0;
 }
