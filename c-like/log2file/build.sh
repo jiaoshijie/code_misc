@@ -5,7 +5,7 @@ set -xe
 CC=cc
 
 SRC_FILES="main.c cJSON.c"
-CFLAGS="-Wall -Wextra"
+CFLAGS="-Wall -Wextra -O2"
 BINARY="log"
 
 
