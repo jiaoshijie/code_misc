@@ -1,11 +1,19 @@
-// #![no_std]
+#![no_std]
 
-// use core::panic::PanicInfo;
-//
-// #[panic_handler]
-// fn panic(_panic: &PanicInfo<'_>) -> ! {
-//     core::arch::wasm32::unreachable()
-// }
+// extern crate alloc;
+// extern crate dlmalloc;
+
+use core::panic::PanicInfo;
+// use alloc::string::String;
+// use dlmalloc::GlobalDlmalloc;
+
+// #[global_allocator]
+// static ALLOCATOR: GlobalDlmalloc = GlobalDlmalloc;
+
+#[panic_handler]
+fn panic(_panic: &PanicInfo<'_>) -> ! {
+    core::arch::wasm32::unreachable()
+}
 
 mod math {
     mod math_js {
@@ -45,6 +53,7 @@ pub extern "C" fn add_one_random(x: f64) -> f64 {
 
 #[export_name = "greeting"]
 pub extern "C" fn greeting() {
-    let s = String::from("hello wasm!!!");
-    IO::print(&s);
+    // let s = String::from("hello wasm!!!");
+    // IO::print(&s);
+    IO::print("hello wasm!!!");
 }
