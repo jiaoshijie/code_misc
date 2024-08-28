@@ -127,13 +127,14 @@ static int __init module_init_(void) {
         goto AddError;
     }
     printk("do_nothing is successfully created!!!\n");
+    return 0;
 AddError:
     device_destroy(my_class, my_device_nr);
 FileError:
     class_destroy(my_class);
 ClassError:
     unregister_chrdev(my_device_nr, DRIVER_NAME);
-    return 0;
+    return -1;
 }
 
 /*
