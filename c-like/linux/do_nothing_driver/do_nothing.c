@@ -100,20 +100,21 @@ static int __init module_init_(void) {
 
     // Allocate a device number
     if (alloc_chrdev_region(&my_device_nr, 0, 1, DRIVER_NAME) < 0) {
-        printk("Device Nr. could not be allocated!!!");
+        printk("Device Nr. could not be allocated!!!\n");
         return -1;
     }
-    printk("read_write - Device Nr. Major: %d, Minor: %d was registered!", my_device_nr >> 20, my_device_nr && 0xfffff);
+    printk("read_write - Device Nr. Major: %d, Minor: %d was registered!\n", my_device_nr >> 20, my_device_nr && 0xfffff);
 
     // Create device class
     if ((my_class = class_create(DRIVER_CLASS)) == NULL) {
-        printk("Device class can not be created!");
+        printk("Device class can not be created!\n");
         goto ClassError;
     }
+    printk("do_nothing: my_class = %p\n", my_class);
 
     // create device file
     if (device_create(my_class, NULL, my_device_nr, NULL, DRIVER_NAME) == NULL) {
-        printk("Can not create device file!");
+        printk("Can not create device file!\n");
         goto FileError;
     }
 
@@ -121,10 +122,11 @@ static int __init module_init_(void) {
     cdev_init(&my_device, &fops);
 
     // Registering device to kernel
-    if (cdev_add(&my_device, my_device_nr, 1) == -1) {
-        printk("Registering of device to kernel failed!");
+    if (cdev_add(&my_device, my_device_nr, 1) < 0) {
+        printk("Registering of device to kernel failed!\n");
         goto AddError;
     }
+    printk("do_nothing is successfully created!!!\n");
 AddError:
     device_destroy(my_class, my_device_nr);
 FileError:
