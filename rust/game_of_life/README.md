@@ -14,3 +14,4 @@
 - [rust to wasm the hard way](https://surma.dev/things/rust-to-webassembly/)
 - [wasm helloworld](https://depth-first.com/articles/2020/01/13/first-steps-in-webassembly-hello-world/)
 - [dlmalloc](https://www.reddit.com/r/rust/comments/x1cle0/dont_use_wee_alloc_in_production_code_targeting/)
+- [WASM_tutorial](https://marcoselvatici.github.io/WASM_tutorial/)
