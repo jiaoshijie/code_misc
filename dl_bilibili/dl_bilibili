@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-jq '.initEpList' < text.json | jq '.[].link'
