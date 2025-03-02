@@ -3,6 +3,7 @@
 #include <semaphore.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdatomic.h>
 
 // https://preshing.com/20120515/memory-reordering-caught-in-the-act/
 // In particular, each processor is allowed to delay the effect of
@@ -21,10 +22,12 @@ void *handler_1(void *args) {
         sem_wait(&sem1);
         while (random() % 8 != 0) {}
 
-        X = 1;
+        // atomic_store_explicit(&X, 1, memory_order_relaxed);
+        atomic_store_explicit(&X, 1, memory_order_release);
         asm volatile("" ::: "memory");  // prevent compiler reordering
-        // asm volatile("mfence" ::: "memory");  // prevent reordering
-        r1 = Y;
+        // asm volatile("mfence" ::: "memory");  // prevent reordering, this only works in x86 arch
+        // r1 = atomic_load_explicit(&Y, memory_order_relaxed);
+        r1 = atomic_load_explicit(&Y, memory_order_acquire);
 
         sem_post(&end_sem);
     }
@@ -40,10 +43,12 @@ void *handler_2(void *args) {
         sem_wait(&sem2);
         while (random() % 8 != 0) {}
 
-        Y = 1;
+        // atomic_store_explicit(&Y, 1, memory_order_relaxed);
+        atomic_store_explicit(&Y, 1, memory_order_release);
         asm volatile("" ::: "memory");  // prevent compiler reordering
-        // asm volatile("mfence" ::: "memory");  // prevent reordering
-        r2 = X;
+        // asm volatile("mfence" ::: "memory");  // prevent reordering, this only works in x86 arch
+        // r2 = atomic_load_explicit(&X, memory_order_relaxed);
+        r2 = atomic_load_explicit(&X, memory_order_acquire);
 
         sem_post(&end_sem);
     }
