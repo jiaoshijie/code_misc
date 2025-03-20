@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <time.h>
+#include <stdint.h>
 
 #include "skip_list.h"
 
@@ -21,7 +22,7 @@ static struct sl_node *get_sl_node(struct list_node *top) {
         t = t->bot;
     }
 
-    return (struct sl_node *)((size_t)t - (size_t)&(((struct sl_node *)(0))->list));
+    return (struct sl_node *)((uintptr_t)t - (uintptr_t)&(((struct sl_node *)(0))->list));
 }
 
 static struct list_node *recursive_insert(struct list_node *head,
