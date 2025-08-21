@@ -75,7 +75,28 @@ int main() {
     puts("--------------------------------------------------------------------\n");
     printf("func_condition_op(false, 123., a)   = %d\n", func_condition_op(false, 123., a));
     printf("func_condition_if(false, 123., a)   = %d\n", func_condition_if(false, 123., a));
+
+    // why the value is 0 here on x86, but on arm is -1
+    // convert double to integer istruction behavior is different on the two architectures, when convert double value that is out of range the target integer value
+    //
+    // on x86
+    //      large positive double value will be the most `negative` number representable in the destination integer
+    //      large negative double value will be the most negative number representable in the destination integer
+    // on arm
+    //      large positive double value will be the most `positive` number representable in the destination integer
+    //      large negative double value will be the most negative number representable in the destination integer
+    //
+    // As the -22 will first be casted to uint64_t
+    // then convert to double (which is a positive double value)
+    // then convert to int32
+    //    on x86 0x80000000
+    //    on arm 0x7fffffff
+    // then cast to int16/uint16
+    //    when casting high precision integer to low precision integer, the c compiler will just truncate the high precision integer
+    //    on x86 int16/uint16 = 0x0000 = 0
+    //    on arm int16/uint16 = 0xffff = -1
     printf("func_condition_op(false, 123., -22) = %d\n", (int16_t)func_condition_op(false, 123., -22));  // not correct
+
     printf("func_condition_if(false, 123., -22) = %d\n", (int16_t)func_condition_if(false, 123., -22));
 
     // signed
