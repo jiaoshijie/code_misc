@@ -8,6 +8,7 @@
 #include <sys/ioctl.h>
 #include <linux/if_arp.h>
 #include <arpa/inet.h>
+#include <assert.h>
 
 // void get_if_list() {
 //     struct if_nameindex *if_list, *iter;
@@ -113,7 +114,7 @@ bool get_if_addr_list(struct sif_info **head) {
 
     for (iter = ifaddr_list; iter != NULL; iter = iter->ifa_next) {
         if (iter->ifa_addr) {
-            if (iter->ifa_addr->sa_family == AF_INET) {
+            if (iter->ifa_addr->sa_family == AF_INET || iter->ifa_addr->sa_family == AF_PACKET) {
                 node = (struct sif_info *)calloc(1, sizeof(struct sif_info));
                 if (!node) goto failed;
 
@@ -121,15 +122,16 @@ bool get_if_addr_list(struct sif_info **head) {
                 if (!node->name) goto failed;
 
                 if (!get_if_type(node)) goto failed;
-
-                if (getnameinfo(iter->ifa_addr, sizeof(struct sockaddr_in),
-                            host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST) != 0) {
-                    goto failed;
-                }
-
                 node->s_family = iter->ifa_addr->sa_family;
-                node->host = strdup(host);
-                if (!node->host) goto failed;
+
+                if (iter->ifa_addr->sa_family == AF_INET) {
+                    if (getnameinfo(iter->ifa_addr, sizeof(struct sockaddr_in),
+                                host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST) != 0) {
+                        goto failed;
+                    }
+                    node->host = strdup(host);
+                    if (!node->host) goto failed;
+                }
             }
         } else {
             node = (struct sif_info *)calloc(1, sizeof(struct sif_info));

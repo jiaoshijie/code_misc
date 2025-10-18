@@ -6,10 +6,14 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <math.h>
 
 // https://labs.apnic.net/index.php/2014/03/10/protocol-basics-the-network-time-protocol/
+// https://github.com/lettier/ntpclient/blob/master/source/c/main.c
+// https://github.com/troglobit/sntpd
 
-#define NTP_IP "192.168.1.26"
+// #define NTP_IP "192.168.0.41"
+#define NTP_IP "162.159.200.1"
 #define NTP_PORT 123
 #define NTP_TS_DELTA 2208988800ull  // For converting ntp time epoch to unix time epoch
 #define NTP_TS_FRAC_MASK32 0x0000FFFFul
@@ -57,13 +61,17 @@ void pretty_print_ntp_packet(struct ntp_packet *p) {
             "transmit timestamp(T3): %x.%x\n",
             p->leap_indicator, p->version_number, p->mode, p->stratum,
             p->poll, p->precision,
-            p->root_delay >> 16, p->root_delay & NTP_TS_FRAC_MASK16,
-            p->root_dispersion >> 16, p->root_dispersion & NTP_TS_FRAC_MASK16,
+            p->root_delay >> 16, (uint16_t)(p->root_delay & NTP_TS_FRAC_MASK16),
+            p->root_dispersion >> 16, (uint16_t)(p->root_dispersion & NTP_TS_FRAC_MASK16),
             p->ref_id,
-            p->ref_timestamp >> 32, p->ref_timestamp & NTP_TS_FRAC_MASK32,
-            p->orig_timestamp >> 32, p->orig_timestamp & NTP_TS_FRAC_MASK32,
-            p->recv_timestamp >> 32, p->recv_timestamp & NTP_TS_FRAC_MASK32,
-            p->trans_timestamp >> 32, p->trans_timestamp & NTP_TS_FRAC_MASK32);
+            (uint32_t)(p->ref_timestamp >> 32),
+            (uint32_t)(p->ref_timestamp & NTP_TS_FRAC_MASK32),
+            (uint32_t)(p->orig_timestamp >> 32),
+            (uint32_t)(p->orig_timestamp & NTP_TS_FRAC_MASK32),
+            (uint32_t)(p->recv_timestamp >> 32),
+            (uint32_t)(p->recv_timestamp & NTP_TS_FRAC_MASK32),
+            (uint32_t)(p->trans_timestamp >> 32),
+            (uint32_t)(p->trans_timestamp & NTP_TS_FRAC_MASK32));
 }
 
 int main() {
@@ -75,6 +83,16 @@ int main() {
     int sockfd = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (sockfd < 0) {
         perror("create UDP socket failed");
+        exit(1);
+    }
+
+    struct timeval timeout = {
+        .tv_usec = 500 * 1000,  // 500ms
+    };
+
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        perror("setsockopt");
+        close(sockfd);
         exit(1);
     }
 
