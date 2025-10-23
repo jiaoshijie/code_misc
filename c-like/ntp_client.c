@@ -23,7 +23,7 @@
 // https://github.com/lettier/ntpclient/blob/master/source/c/main.c
 // https://github.com/troglobit/sntpd
 
-#define NTP_DUMP_PACKET_INFO
+// #define NTP_DUMP_PACKET_INFO
 #define NTP_PORT 123
 #define NTP_TS_DELTA 2208988800ull  // For converting ntp time epoch to unix time epoch
 #define TIMESPEC2US(ts) ((uint64_t)ts.tv_sec * 1000000 + (uint64_t)ts.tv_nsec / 1000)
