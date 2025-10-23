@@ -1,7 +1,7 @@
 /*
  * (C) 2025 jiaoshijie.
  *
- * Compile: gcc ntp_client.c -o ntp_client -lm
+ * Compile: gcc ntp_client.c -o ntp_client
  *
  * Usage: ./ntp_client 192.168.0.1
  *
@@ -16,7 +16,6 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <math.h>
 #include <time.h>
 #include <sys/time.h>
 
@@ -24,7 +23,7 @@
 // https://github.com/lettier/ntpclient/blob/master/source/c/main.c
 // https://github.com/troglobit/sntpd
 
-// #define NTP_DUMP_PACKET_INFO
+#define NTP_DUMP_PACKET_INFO
 #define NTP_PORT 123
 #define NTP_TS_DELTA 2208988800ull  // For converting ntp time epoch to unix time epoch
 #define TIMESPEC2US(ts) ((uint64_t)ts.tv_sec * 1000000 + (uint64_t)ts.tv_nsec / 1000)
@@ -87,6 +86,29 @@ static void report_error(const char *msg, bool quit) {
     if (quit) exit(1);
 }
 
+static double pow2(const int8_t exp) {
+    assert(abs(exp) < 32);
+
+    if (exp < 0) {
+        return (double)1 / (1ull << -exp);
+    }
+
+    return (double)(1ull << exp);
+}
+
+static int8_t s_log2(const uint64_t arg) {
+    assert(arg > 0);
+    int8_t exp = 63;
+    uint64_t val = 1ull << 63;
+
+    while (!(val & arg)) {
+        exp--;
+        val >>= 1;
+    }
+
+    return exp;
+}
+
 // year-month-day hour:minute:second.sub-second (UTC)
 static void print_format_time(const char *desc, const struct tm *tm, const uint32_t frac) {
     assert(tm != NULL && desc != NULL);
@@ -113,11 +135,11 @@ static void pretty_print_ntp_packet(const struct ntp_packet *p) {
     printf("stratum(The server hierarchy level): %u (%s)\n", p->stratum, stratum_str);
     if (p->stratum == 0) return;
 
-    printf("poll(The suggested interval for the client to send sync msg): %d (%lfs)\n", p->poll, pow(2, p->poll));
+    printf("poll(The suggested interval for the client to send sync msg): %d (%lfs)\n", p->poll, pow2(p->poll));
 
     // TODO: make the time more readable
     // most OS precision is -20 ~ -24.
-    printf("precision(The server's clock precision): %d (%lfs)\n", p->precision, pow(2, p->precision));
+    printf("precision(The server's clock precision): %d (%lfs)\n", p->precision, pow2(p->precision));
 
 
     //                round-trip delay
@@ -227,7 +249,7 @@ static struct ntp_tuple *ntp_client_process(const int sockfd,
         struct ntp_packet p = {
             .version_number = 4,
             .mode = 3,
-            .poll = log2(NTP_REQUEST_INTERVAL_S),
+            .poll = s_log2(NTP_REQUEST_INTERVAL_S),
         };
 
         clock_gettime(CLOCK_REALTIME, &t1);
@@ -253,7 +275,7 @@ static struct ntp_tuple *ntp_client_process(const int sockfd,
             *min_index = i;
         }
 
-        uint64_t interval = pow(2, p.poll);
+        uint64_t interval = pow2(p.poll);
         sleep(NTP_REQUEST_INTERVAL_S > interval ? interval : NTP_REQUEST_INTERVAL_S);
     }
 
