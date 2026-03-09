@@ -14,7 +14,15 @@ void sum1(int val) {
     for (int i = 1; i <= val; i++) {
         float y = i - corr;
         float t = sum + y;  // may carry or drop
-        corr = t - sum - y; // get value that be rounded
+        // NOTE: must minus `sum` first
+        corr = (t - sum) - y; // get value that be rounded
+        // if (val == VAL1) {
+        //     int a = t;
+        //     int b = sum;
+        //     if ((int)(t - sum) != (a - b)) {
+        //         printf("%d: %d\n", i, (int)(t - sum) - (a - b));
+        //     }
+        // }
         sum = t;
     }
 
@@ -34,10 +42,30 @@ void sum3(float val) {
     printf("Sum3 is %f\n", (1.f + val) / 2.f * val);
 }
 
+void sum4(int val) {
+    float sum = 0.0f, corr = 0.0f;
+    for (int i = 1; i <= val; i++) {
+        float y = i - corr;
+        float t = sum + y;  // may carry or drop
+        // {
+        //     int a = t;
+        //     int b = y;
+        //     if ((int)(t - y) != (a - b)) {
+        //         printf("%d: %d\n", i, (int)(t - y) - (a - b));
+        //     }
+        // }
+        corr = (t - y) - sum;  // WRONG!!!
+        sum = t;
+    }
+
+    printf("Sum4 is %f\n", sum);
+}
+
 int main() {
     sum1(VAL1);  // NOTE: works
     sum2(VAL1);
     sum3(VAL1);
+    sum4(VAL1);  // 50005004 WRONG!!!
     printf("%d\n", (1 + VAL1) * (VAL1 / 2));
     puts("------------------------------------------------------------");
     sum1(VAL2); // NOTE: does not work
